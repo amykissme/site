@@ -50,6 +50,8 @@ header .logo{font-size:22px;font-weight:800}
 .m{max-width:78%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.35;word-wrap:break-word;animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
 .m.her{align-self:flex-start;background:#121b3b;border:1px solid var(--line);border-bottom-left-radius:6px}
 .m.me{align-self:flex-end;background:linear-gradient(135deg,var(--blue),var(--blue2));border-bottom-right-radius:6px}
+.m.photo{padding:4px;max-width:70%}
+.m.photo img{display:block;width:100%;border-radius:14px}
 @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.92)}to{opacity:1;transform:none}}
 .typing{align-self:flex-start;background:#121b3b;border:1px solid var(--line);border-radius:18px;border-bottom-left-radius:6px;padding:12px 16px;display:flex;gap:5px;animation:pop .35s both}
 .typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:bl 1.2s infinite}
@@ -130,6 +132,20 @@ $('name').addEventListener('keydown',e=>{if(e.key==='Enter')register()});
 const msgs=$('msgs'),menu=$('menu');
 const scroll=()=>{msgs.scrollTop=msgs.scrollHeight};
 function add(text,who){const d=document.createElement('div');d.className='m '+who;d.textContent=text;msgs.appendChild(d);setTimeout(scroll,30)}
+// ===== МЕСТО ДЛЯ ФОТО: положи файл photo.jpg в ту же папку, что и index.html =====
+const PHOTO_SRC='photo.jpg';
+// ====================================================================================
+async function herPhoto(src){
+  const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';
+  msgs.appendChild(t);setTimeout(scroll,30);
+  await sleep(1500);
+  t.remove();
+  const d=document.createElement('div');d.className='m her photo';
+  const img=new Image();img.src=src;img.alt='';
+  img.onload=()=>setTimeout(scroll,30);
+  img.onerror=()=>{d.textContent='[нет файла '+src+']'};
+  d.appendChild(img);msgs.appendChild(d);setTimeout(scroll,30);
+}
 async function meSays(text){
   await sleep(600);add(text,'me');await sleep(500);
 }
@@ -172,6 +188,8 @@ $('open').onclick=async()=>{
         await herSays('какая нахуй соня долбаеб? я лиза. ты опять меня перепутал со своей ебаной бывшей соней сергеевой');
         await sleep(1800);
         await meSays('бляяяяяяя, вась, связь');
+        await sleep(1500);
+        await herPhoto(PHOTO_SRC);
       }}
     ]);
   }}]);
