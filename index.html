@@ -133,7 +133,7 @@ const msgs=$('msgs'),menu=$('menu');
 const scroll=()=>{msgs.scrollTop=msgs.scrollHeight};
 function add(text,who){const d=document.createElement('div');d.className='m '+who;d.textContent=text;msgs.appendChild(d);setTimeout(scroll,30)}
 // ===== МЕСТО ДЛЯ ФОТО: положи файл photo.jpg в ту же папку, что и index.html =====
-const PHOTO_SRC='photo.jpg';
+const PHOTO_SRC='photo.png';
 // ====================================================================================
 async function herPhoto(src){
   const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';
