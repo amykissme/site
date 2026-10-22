@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Грязнульки.com</title>
+<style>
+:root{--bg:#05070f;--bg2:#0a1024;--panel:#0d1530;--blue:#1e5bff;--blue2:#0f3bb5;--line:#1a2548;--text:#e8edff;--mute:#7d8bb8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(circle at 20% 0%,#0b1a4a 0%,var(--bg) 60%);color:var(--text);overflow:hidden}
+.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:scale(.98);transition:opacity .6s ease,transform .6s ease,visibility .6s}
+.screen.on{opacity:1;visibility:visible;transform:none}
+.logo b{color:#ff2a3d}.logo span{color:#fff}
+.card{width:min(380px,90vw);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:32px 26px;box-shadow:0 20px 60px rgba(30,91,255,.18);text-align:center}
+.card .logo{font-size:30px;font-weight:800;margin-bottom:6px}
+.card p{color:var(--mute);font-size:14px;margin-bottom:22px}
+input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font-size:16px;outline:none;transition:border .3s,box-shadow .3s}
+input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,91,255,.25)}
+button{font:inherit;cursor:pointer;border:0;color:#fff;transition:transform .2s,background .3s,opacity .3s}
+.go{width:100%;margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--blue2));font-weight:600;font-size:16px}
+.go:hover{transform:translateY(-2px)}.go:active{transform:scale(.98)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.bar{width:min(300px,70vw);height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:18px auto 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue2),#4d8bff);border-radius:6px;transition:width .5s ease}
+#load{flex-direction:column;text-align:center}
+#load .logo{font-size:34px;font-weight:800}
+#ltxt{color:var(--mute);margin-top:14px;font-size:14px;height:18px}
+/* app */
+#app{align-items:stretch;justify-content:center}
+.wrap{width:min(560px,100%);height:100%;display:flex;flex-direction:column;background:var(--bg);border-left:1px solid var(--line);border-right:1px solid var(--line);position:relative;overflow:hidden}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:var(--panel);border-bottom:1px solid var(--line);z-index:3}
+header .logo{font-size:22px;font-weight:800}
+#hello{color:var(--mute);font-size:14px}#hello b{color:var(--text)}
+.view{position:absolute;top:57px;bottom:0;left:0;right:0;display:flex;flex-direction:column;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s}
+#list{background:var(--bg2)}
+#chat{transform:translateX(100%);opacity:0;background:linear-gradient(180deg,var(--bg),#070c1c)}
+.wrap.in #list{transform:translateX(-30%);opacity:0}
+.wrap.in #chat{transform:none;opacity:1}
+.contact{display:flex;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;border-bottom:1px solid var(--line);transition:background .3s}
+.contact:hover{background:#0f1a3d}
+.av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#0a1f66);display:grid;place-items:center;font-weight:700;font-size:18px;flex:none}
+.contact div small{display:block;color:var(--mute);margin-top:3px;font-size:13px}
+.chead{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.chead .av{width:38px;height:38px;font-size:15px}
+.chead small{display:block;color:#4d8bff;font-size:12px}
+.back{background:none;font-size:22px;color:var(--mute);padding:0 6px}
+#msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.m{max-width:78%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.35;word-wrap:break-word;animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
+.m.her{align-self:flex-start;background:#121b3b;border:1px solid var(--line);border-bottom-left-radius:6px}
+.m.me{align-self:flex-end;background:linear-gradient(135deg,var(--blue),var(--blue2));border-bottom-right-radius:6px}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.92)}to{opacity:1;transform:none}}
+.typing{align-self:flex-start;background:#121b3b;border:1px solid var(--line);border-radius:18px;border-bottom-left-radius:6px;padding:12px 16px;display:flex;gap:5px;animation:pop .35s both}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:bl 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-4px)}}
+.menu{background:var(--panel);border-top:1px solid var(--line);padding:0 14px;max-height:0;opacity:0;overflow:hidden;transition:max-height .5s ease,opacity .4s,padding .5s}
+.menu.open{max-height:220px;opacity:1;padding:12px 14px 16px}
+.menu h4{font-size:12px;color:var(--mute);font-weight:500;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin-top:8px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);font-size:15px}
+.opt:hover{border-color:var(--blue);background:#0f1a3d;transform:translateX(4px)}
+</style>
+</head>
+<body>
+
+<div class="screen on" id="reg">
+  <div class="card" id="regcard">
+    <div class="logo"><b>Грязнульки</b><span>.com</span></div>
+    <p>Регистрация — это быстро. Введи своё имя.</p>
+    <input id="name" placeholder="Твоё имя" maxlength="24" autocomplete="off">
+    <button class="go" id="start">Продолжить</button>
+  </div>
+</div>
+
+<div class="screen" id="load">
+  <div class="logo"><b>Грязнульки</b><span>.com</span></div>
+  <div class="bar"><i id="fill"></i></div>
+  <div id="ltxt"></div>
+</div>
+
+<div class="screen" id="app">
+  <div class="wrap" id="wrap">
+    <header>
+      <div class="logo"><b>Грязнульки</b><span>.com</span></div>
+      <div id="hello">Привет, <b id="uname"></b></div>
+    </header>
+
+    <div class="view" id="list">
+      <div class="contact" id="open">
+        <div class="av">Г</div>
+        <div><strong>Грязнулька</strong><small>онлайн</small></div>
+      </div>
+    </div>
+
+    <div class="view" id="chat">
+      <div class="chead">
+        <button class="back" id="back">‹</button>
+        <div class="av">Г</div>
+        <div><strong>Грязнулька</strong><small>в сети</small></div>
+      </div>
+      <div id="msgs"></div>
+      <div class="menu" id="menu"><h4 id="mtitle"></h4><div id="opts"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const show=id=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')};
+
+async function register(){
+  const v=$('name').value.trim();
+  if(!v){const c=$('regcard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');$('name').focus();return}
+  $('uname').textContent=v;
+  show('load');
+  const steps=['Создаём аккаунт…','Проверяем данные…','Подключаемся к серверу…','Почти готово…'];
+  for(let i=0;i<steps.length;i++){
+    $('ltxt').textContent=steps[i];
+    $('fill').style.width=((i+1)/steps.length*100)+'%';
+    await sleep(900);
+  }
+  await sleep(300);
+  show('app');
+}
+$('start').onclick=register;
+$('name').addEventListener('keydown',e=>{if(e.key==='Enter')register()});
+
+const msgs=$('msgs'),menu=$('menu');
+const scroll=()=>{msgs.scrollTop=msgs.scrollHeight};
+function add(text,who){const d=document.createElement('div');d.className='m '+who;d.textContent=text;msgs.appendChild(d);setTimeout(scroll,30)}
+async function meSays(text){
+  await sleep(600);add(text,'me');await sleep(500);
+}
+async function herSays(text){
+  const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';
+  msgs.appendChild(t);setTimeout(scroll,30);
+  await sleep(1300);
+  t.remove();add(text,'her');
+}
+async function choose(title,options){
+  $('mtitle').textContent=title;
+  $('opts').innerHTML='';
+  options.forEach(o=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=o.text;
+    b.onclick=async()=>{menu.classList.remove('open');add(o.text,'me');await sleep(500);o.next()};
+    $('opts').appendChild(b);
+  });
+  await sleep(300);menu.classList.add('open');setTimeout(scroll,500);
+}
+
+let started=false;
+$('open').onclick=async()=>{
+  $('wrap').classList.add('in');
+  if(started)return;started=true;
+  await sleep(700);
+  await herSays('Привет');
+  choose('Выбери сообщение',[{text:'Привет',next:async()=>{
+    await herSays('Не хочешь приехать сегодня вечером?');
+    choose('После ответа собеседника',[
+      {text:'не, не охота',next:()=>herSays('бля ну и иди нахуй')},
+      {text:'да, ахуеть',next:async()=>{
+        await herSays('ну прихвати гандоны))');
+        await sleep(400);
+        await herSays('адрес - советская 1в');
+        await sleep(1800);
+        await meSays('бля ну если шо я девственник');
+        await herSays('ахахахахаха ахуеть, умри нахуй тогда');
+        await sleep(1500);
+        await meSays('бля сонь ну пожалуйста');
+        await herSays('какая нахуй соня долбаеб? я лиза. ты опять меня перепутал со своей ебаной бывшей соней сергеевой');
+        await sleep(1800);
+        await meSays('бляяяяяяя, вась, связь');
+      }}
+    ]);
+  }}]);
+};
+$('back').onclick=()=>$('wrap').classList.remove('in');
+</script>
+</body>
+</html>
