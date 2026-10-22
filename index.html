@@ -133,7 +133,7 @@ const msgs=$('msgs'),menu=$('menu');
 const scroll=()=>{msgs.scrollTop=msgs.scrollHeight};
 function add(text,who){const d=document.createElement('div');d.className='m '+who;d.textContent=text;msgs.appendChild(d);setTimeout(scroll,30)}
 // ===== МЕСТО ДЛЯ ФОТО: положи файл photo.jpg в ту же папку, что и index.html =====
-const PHOTO_SRC='photo.jpeg';
+const PHOTO_SRC='photo.jpg';
 // ====================================================================================
 async function herPhoto(src){
   const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';
@@ -179,13 +179,13 @@ $('open').onclick=async()=>{
       {text:'да, ахуеть',next:async()=>{
         await herSays('ну прихвати гандоны))');
         await sleep(400);
-        await herSays('адрес - советская 1в');
+        await herSays('адрес - общага 6.2');
         await sleep(1800);
         await meSays('бля ну если шо я девственник');
         await herSays('ахахахахаха ахуеть, умри нахуй тогда');
         await sleep(1500);
         await meSays('бля сонь ну пожалуйста');
-        await herSays('какая нахуй соня долбаеб? я лиза. ты опять меня перепутал со своей ебаной бывшей соней сергеевой');
+        await herSays('какая нахуй соня долбаеб? я катя. ты опять меня перепутал со своей ебаной бывшей соней сергеевой');
         await sleep(1800);
         await meSays('бляяяяяяя, вась, связь');
         await sleep(1500);
